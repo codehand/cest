@@ -46,3 +46,4 @@
 ## Examples
 
     cest -all .
+    go get -u github.com/mjibson/esc

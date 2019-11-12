@@ -13,6 +13,12 @@
 
 package bindata
 
+import (
+	"bytes"
+	"compress/gzip"
+	"log"
+)
+
 // AssetNames returns the names of the assets. (for compatible with go-bindata)
 func AssetNames() []string {
 	names := make([]string, 0, len(_escData))
@@ -20,4 +26,22 @@ func AssetNames() []string {
 		names = append(names, name)
 	}
 	return names
+}
+
+func AssetZip() {
+	var buf bytes.Buffer
+	zw := gzip.NewWriter(&buf)
+	zw.Name = "test"
+	zw.Comment = "test"
+	// zw.ModTime = file.modTime
+
+	if _, err := zw.Write([]byte("ashshsaf")); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := zw.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	zw.Reset(&buf)
 }
