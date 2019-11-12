@@ -21,6 +21,7 @@ var (
 func init() {
 	initEmptyTmpls()
 	for _, name := range bindata.AssetNames() {
+		fmt.Println("name:~", name)
 		tmpls = template.Must(tmpls.Parse(bindata.FSMustString(false, name)))
 	}
 }
@@ -125,7 +126,7 @@ func renderHeader(w io.Writer, h *Header) error {
 	return err
 }
 
-func renderTestFunction(w io.Writer, f *Function, printInputs bool, subtests bool, templateParams map[string]interface{}) error {
+func renderTestFunction(w io.Writer, head *Header, f *Function, printInputs bool, subtests bool, templateParams map[string]interface{}) error {
 	// check test existed
 
 	return tmpls.ExecuteTemplate(w, "function", struct {

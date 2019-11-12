@@ -39,6 +39,12 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Files: %v", err)
 	}
+	// for _, item := range files {
+	// 	fmt.Println(item.TestPath())
+	// }
+	// for _, item := range srcFiles {
+	// 	fmt.Println(item.RealPath())
+	// }
 	if opt.Importer == nil || opt.Importer() == nil {
 		opt.Importer = importer.Default
 	}
@@ -90,17 +96,28 @@ func readResults(rs <-chan *result) ([]*GeneratedTest, error) {
 func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) {
 	p := &Parser{Importer: opt.Importer()}
 	sr, err := p.Parse(string(src), files)
+	fmt.Printf("check src: %v\n", string(src))
+	fmt.Printf("check files: %v\n", files)
+	fmt.Printf("check sr: %v\n", sr.Funcs)
+	// find func
+	for _, item := range sr.Funcs {
+		fmt.Printf("func: %v\n", item)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("Parser.Parse source file: %v", err)
 	}
 	h := sr.Header
 	h.Code = nil // Code is only needed from parsed test files.
 	testPath := Path(src).TestPath()
-	// get data func from file
+	fmt.Printf("func: 1 %s\n", testPath)
 	h, tf, err := parseTestFile(p, testPath, h)
 	if err != nil {
 		return nil, err
 	}
+	// fmt.Printf("%v\n", tf)
+	// fmt.Printf("h2 add content func: %v\n", string(h.Code))
+	fmt.Printf("lst cmt: %v\n", h.Comments) // tamnt add comment
 	funcs := testableFuncs(sr.Funcs, opt.Only, opt.Exclude, opt.Exported, tf)
 	if len(funcs) == 0 {
 		return nil, nil
@@ -114,6 +131,7 @@ func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) 
 	if err != nil {
 		return nil, fmt.Errorf("output.Process: %v", err)
 	}
+	fmt.Printf("func: 2\n")
 	return &GeneratedTest{
 		Path:      testPath,
 		Functions: funcs,
@@ -123,8 +141,10 @@ func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) 
 
 func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, error) {
 	if !IsFileExist(testPath) {
+		fmt.Println("return if not exist")
 		return h, nil, nil
 	}
+	fmt.Println("testPath exist and check: ", testPath)
 	tr, err := p.Parse(testPath, nil)
 	if err != nil {
 		if err == ErrEmptyFile {
@@ -139,6 +159,7 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 	}
 	tr.Header.Imports = append(tr.Header.Imports, h.Imports...)
 	h = tr.Header
+	fmt.Println("tr.Header:", tr.Header.Comments)
 	return h, testFuncs, nil
 }
 

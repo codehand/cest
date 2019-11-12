@@ -1,0 +1,1 @@
+go install github.com/codehand/cest && cest -all .

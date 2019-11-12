@@ -103,6 +103,7 @@ func parseRegexp(s string) (*regexp.Regexp, error) {
 }
 
 func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
+	fmt.Println("generateTests:", path)
 	gts, err := GenerateTests(path, opt)
 	if err != nil {
 		fmt.Fprintln(out, err.Error())

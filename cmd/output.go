@@ -55,7 +55,7 @@ func writeTests(w io.Writer, head *Header, funcs []*Function, opt *OptionsOutput
 		return fmt.Errorf("render.Header: %v", err)
 	}
 	for _, fun := range funcs {
-		if err := renderTestFunction(b, fun, opt.PrintInputs, opt.Subtests, opt.TemplateParams); err != nil {
+		if err := renderTestFunction(b, head, fun, opt.PrintInputs, opt.Subtests, opt.TemplateParams); err != nil {
 			return fmt.Errorf("render.TestFunction: %v", err)
 		}
 	}

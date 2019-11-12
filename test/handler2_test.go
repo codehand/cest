@@ -1,3 +1,4 @@
+// ABC is func1
 package test
 
 import "testing"

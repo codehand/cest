@@ -70,9 +70,18 @@ func (p *Parser) readFile(srcPath string) ([]byte, error) {
 
 func (p *Parser) parseFile(fset *token.FileSet, srcPath string) (*ast.File, error) {
 	f, err := parser.ParseFile(fset, srcPath, nil, parser.ParseComments)
+	fmt.Println("test:", len(f.Comments))
+	for _, item := range f.Comments {
+		fmt.Printf("1: %v\n", item.Text())
+
+		for _, te := range item.List {
+			fmt.Printf("2: %v\n", te.Text)
+		}
+	}
 	if err != nil {
 		return nil, fmt.Errorf("target parser.ParseFile(): %v", err)
 	}
+
 	return f, nil
 }
 
@@ -134,16 +143,25 @@ func parsePkgComment(f *ast.File, pkgPos token.Pos) []string {
 	var comments []string
 	var count int
 
+	// fmt.Println("f.Comments: ", len(f.Comments))
+	// for _, comment := range f.Comments {
+	// 	fmt.Println("f.cmt: ", comment.Text())
+	// }
 	for _, comment := range f.Comments {
-
-		if comment.End() >= pkgPos {
+		fmt.Println("f.cmt: ", f.Name.End())
+		// var pkg token.Pos(len(f.Name.String())
+		if comment.End() <= f.Name.End() {
+			fmt.Println("f.end: ", comment.End())
+			fmt.Println("f.pkgPos: ", pkgPos)
+			fmt.Println("skip")
 			break
 		}
 		for _, c := range comment.List {
+			fmt.Printf("f.c: %s - %v\n", c.Text, c.End())
 			count += len(c.Text) + 1 // +1 for '\n'
 			if count < int(c.End()) {
-				n := int(c.End()) - count - 1
-				comments = append(comments, strings.Repeat("\n", n))
+				// n := int(c.End()) - count - 1
+				comments = append(comments, strings.Repeat("\n", 1))
 				count++ // for last of '\n'
 			}
 			comments = append(comments, c.Text)
@@ -153,6 +171,7 @@ func parsePkgComment(f *ast.File, pkgPos token.Pos) []string {
 	if int(pkgPos)-count > 1 {
 		comments = append(comments, strings.Repeat("\n", int(pkgPos)-count-2))
 	}
+	fmt.Printf("comments 11: %v\n", comments)
 	return comments
 }
 

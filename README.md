@@ -43,3 +43,6 @@
 * Plus mongo shake
 * Validation http request
 
+## Examples
+
+    cest -all .
