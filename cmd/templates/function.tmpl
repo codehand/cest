@@ -41,11 +41,31 @@ func {{.TestName}}(t *testing.T) {
 		{{- if .ReturnsError}}
 			wantErr bool
 		{{- end}}
+		{{- if and .IsEcho}}
+				scriptsFn   *mctx.EchoFn
+		{{- end}}
 	}{
 		// TODO: Add test cases.
 	}
+	{{- if and .IsEcho}}
+			var e *echo.Echo = echo.New()
+	{{- end}}
+	
 	for {{if (or .Subtests (not .IsNaked))}} _, tt := {{end}} range tests {
         {{- if .Subtests }}t.Run(tt.name, func(t *testing.T) { {{- end -}}
+			{{- if and .IsEcho}}
+					if tt.scriptsFn != nil && tt.scriptsFn.BeforeFn != nil {
+						// TODO: Add to do something before script.
+						rs := tt.scriptsFn.DoBefore(e)
+						assert.NotNil(t, rs)
+						for _, item := range rs {
+							assert.NoError(t, item.Error)
+							assert.NotNil(t, item.Data)
+							fmt.Printf("get*ValueOf: %v\n", item.ToString())
+						}
+					}
+			{{- end}}
+			
 			{{- with .Receiver}}
 				{{- if .IsStruct}}
 					{{Receiver .}} := {{if .Type.IsStar}}&{{end}}{{.Type.Value}}{
@@ -63,8 +83,11 @@ func {{.TestName}}(t *testing.T) {
 			{{- if and (not .OnlyReturnsError) (not .OnlyReturnsOneValue) }}
 				{{template "results" $f}} {{template "call" $f}}
 			{{- end}}
+			{{- if and .IsEcho}}
+					ctx, _, _ := mctx.NewContext(e, echo.GET, "", nil, nil)
+			{{- end}}
 			{{- if .ReturnsError}}
-				if {{if .OnlyReturnsError}} err := {{template "call" $f}}; {{end}} (err != nil) != tt.wantErr {
+				if {{if .OnlyReturnsError}} err := {{template "call" $f}}; {{end}} err != nil {
 					t.Errorf("{{template "message" $f}} error = %v, wantErr %v", {{template "inputs" $f}} err, tt.wantErr)
 					{{- if .TestResults}}
 						{{if .Subtests }}return{{else}}continue{{end}}
@@ -81,6 +104,11 @@ func {{.TestName}}(t *testing.T) {
 				{{- end}}
 				t.Errorf("{{template "message" $f}} {{if $f.ReturnsMultiple}}{{Got .}} {{end}}= %v, want %v", {{template "inputs" $f}} {{Got .}}, tt.{{Want .}})
 				}
+			{{- end}}
+			{{- if and .IsEcho}}
+					if tt.scriptsFn != nil && tt.scriptsFn.AfterFn != nil {
+						// TODO: Add to do something after script.
+					}
 			{{- end}}
 		{{- if .Subtests }} }) {{- end -}}
 	}

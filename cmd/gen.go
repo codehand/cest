@@ -96,9 +96,9 @@ func readResults(rs <-chan *result) ([]*GeneratedTest, error) {
 func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) {
 	p := &Parser{Importer: opt.Importer()}
 	sr, err := p.Parse(string(src), files)
-	fmt.Printf("check src: %v\n", string(src))
-	fmt.Printf("check files: %v\n", files)
-	fmt.Printf("check sr: %v\n", sr.Funcs)
+	// fmt.Printf("check src: %v\n", string(src))
+	// fmt.Printf("check files: %v\n", files)
+	// fmt.Printf("check sr: %v\n", sr.Funcs)
 	// find func
 	for _, item := range sr.Funcs {
 		fmt.Printf("func: %v\n", item)
@@ -116,8 +116,8 @@ func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) 
 		return nil, err
 	}
 
-	fmt.Printf("lst cmt: %v\n", h.Comments) // tamnt add comment
-	funcs := testableFuncs(sr.Funcs, opt.Only, opt.Exclude, opt.Exported, tf)
+	// fmt.Printf("lst cmt: %v\n", h.Comments) // tamnt add comment
+	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, tf)
 	if len(funcs) == 0 {
 		return nil, nil
 	}
@@ -154,24 +154,41 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 	}
 	var testFuncs []string
 	for _, fun := range tr.Funcs {
+		fmt.Println("fun.IsEcho 1: ", fun.IsEcho)
+		if fun.IsEcho {
+			h.Imports = append(h.Imports, &Import{
+				Name: "",
+				Path: `"github.com/codehand/cest/echo/mctx"`,
+			})
+		}
 		testFuncs = append(testFuncs, fun.Name)
 	}
 	tr.Header.Imports = append(tr.Header.Imports, h.Imports...)
 	h = tr.Header
-	fmt.Println("tr.Header:", tr.Header.Comments)
+	// fmt.Println("tr.Header:", tr.Header.Comments)
 	return h, testFuncs, nil
 }
 
-func testableFuncs(funcs []*Function, only, excl *regexp.Regexp, exp bool, testFuncs []string) []*Function {
+func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp bool, testFuncs []string) ([]*Function, *Header) {
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
 		if isTestFunction(f, testFuncs) || isExcluded(f, excl) || isUnexported(f, exp) || !isIncluded(f, only) || isInvalid(f) {
 			continue
 		}
+		if f.IsEcho {
+			fmt.Println("f.IsEcho: ", f.IsEcho)
+			for _, im := range h.Imports {
+				fmt.Println(len(im.Name), "~", im.Path)
+			}
+			h.Imports = append(h.Imports, &Import{
+				Name: "",
+				Path: `"github.com/codehand/cest/echo/mctx"`,
+			})
+		}
 		fs = append(fs, f)
 	}
-	return fs
+	return fs, h
 }
 
 func isInvalid(f *Function) bool {

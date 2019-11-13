@@ -37,6 +37,7 @@ func ProcessOutput(head *Header, funcs []*Function, opt *OptionsOutput) ([]byte,
 		return nil, err
 	}
 
+	fmt.Println("b.Bytes():", string(b.Bytes()))
 	out, err := imports.Process(tf.Name(), b.Bytes(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("imports.Process: %v", err)

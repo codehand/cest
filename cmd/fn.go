@@ -34,6 +34,10 @@ func (f *Field) IsWriter() bool {
 	return f.Type.IsWriter
 }
 
+func (f *Field) IsEcho() bool {
+	return true
+}
+
 func (f *Field) IsStruct() bool {
 	return strings.HasPrefix(f.Type.Underlying, "struct")
 }
@@ -74,6 +78,7 @@ type Function struct {
 	Parameters   []*Field
 	Results      []*Field
 	ReturnsError bool
+	IsEcho       bool
 }
 
 func (f *Function) TestParameters() []*Field {
