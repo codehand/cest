@@ -10,7 +10,9 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
+	"os/user"
 	"strings"
+	"time"
 )
 
 // ErrEmptyFile represents an empty file error.
@@ -111,6 +113,26 @@ func (p *Parser) parseFunctions(fset *token.FileSet, f *ast.File, fs []*ast.File
 		}
 		funcs = append(funcs, parseFunc(fDecl, ul, el))
 	}
+	for _, comment := range f.Comments {
+		fmt.Println("f.comment: ", comment.Pos())
+		// var pkg token.Pos(len(f.Name.String())
+		// if comment.End() <= f.Name.End() {
+		// 	fmt.Println("f.end: ", comment.End())
+		// 	fmt.Println("f.pkgPos: ", pkgPos)
+		// 	fmt.Println("skip")
+		// 	break
+		// }
+		// for _, c := range comment.List {
+		// 	fmt.Printf("f.c: %s - %v\n", c.Text, c.End())
+		// 	count += len(c.Text) + 1 // +1 for '\n'
+		// 	if count < int(c.End()) {
+		// 		// n := int(c.End()) - count - 1
+		// 		comments = append(comments, strings.Repeat("\n", 1))
+		// 		count++ // for last of '\n'
+		// 	}
+		// 	comments = append(comments, c.Text)
+		// }
+	}
 	return funcs
 }
 
@@ -171,7 +193,7 @@ func parsePkgComment(f *ast.File, pkgPos token.Pos) []string {
 	if int(pkgPos)-count > 1 {
 		comments = append(comments, strings.Repeat("\n", int(pkgPos)-count-2))
 	}
-	fmt.Printf("comments 11: %v\n", comments)
+	// fmt.Printf("comments 11: %v\n", comments)
 	return comments
 }
 
@@ -201,6 +223,21 @@ func parseFunc(fDecl *ast.FuncDecl, ul map[string]types.Type, el map[*types.Stru
 		Receiver:   parseReceiver(fDecl.Recv, ul, el),
 		Parameters: parseFieldList(fDecl.Type.Params, ul),
 	}
+	cmts := make([]string, 0)
+	if fDecl.Doc != nil {
+		for _, cmt := range fDecl.Doc.List {
+			cmts = append(cmts, cmt.Text)
+		}
+	}
+	user, err := user.Current()
+	if err == nil {
+		cmts = append(cmts, fmt.Sprintf("// Created at %s by %s", time.Now().Format("02-01-2006"), user.Name))
+	} else {
+		cmts = append(cmts, fmt.Sprintf("// Created at %s", time.Now().Format("02-01-2006")))
+	}
+
+	f.Comments = cmts
+
 	fs := parseFieldList(fDecl.Type.Results, ul)
 	i := 0
 	for _, fi := range fs {

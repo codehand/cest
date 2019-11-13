@@ -47,3 +47,4 @@
 
     cest -all .
     go get -u github.com/mjibson/esc
+    esc -o bindata/esc.go -pkg=bindata templates

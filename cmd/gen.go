@@ -115,8 +115,7 @@ func generateTest(src Path, files []Path, opt *Options) (*GeneratedTest, error) 
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Printf("%v\n", tf)
-	// fmt.Printf("h2 add content func: %v\n", string(h.Code))
+
 	fmt.Printf("lst cmt: %v\n", h.Comments) // tamnt add comment
 	funcs := testableFuncs(sr.Funcs, opt.Only, opt.Exclude, opt.Exported, tf)
 	if len(funcs) == 0 {

@@ -68,6 +68,7 @@ type Receiver struct {
 
 type Function struct {
 	Name         string
+	Comments     []string
 	IsExported   bool
 	Receiver     *Receiver
 	Parameters   []*Field

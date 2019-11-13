@@ -2,7 +2,8 @@
 {{- $f := .}}
 
 // {{.TestName}} is func test 
-// abcd
+{{range .Comments}}{{.}}
+{{end -}}
 func {{.TestName}}(t *testing.T) {
 	{{- with .Receiver}}
 		{{- if .IsStruct}}
@@ -20,7 +21,6 @@ func {{.TestName}}(t *testing.T) {
 		{{- range .TestParameters}}
 				{{Param .}} {{.Type}}
 		{{- end}}
-		x int
 	}
 	{{- end}}
 	tests := []struct {
@@ -42,7 +42,7 @@ func {{.TestName}}(t *testing.T) {
 			wantErr bool
 		{{- end}}
 	}{
-		// TODO: Add test cases 11.
+		// TODO: Add test cases.
 	}
 	for {{if (or .Subtests (not .IsNaked))}} _, tt := {{end}} range tests {
         {{- if .Subtests }}t.Run(tt.name, func(t *testing.T) { {{- end -}}

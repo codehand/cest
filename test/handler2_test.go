@@ -2,21 +2,20 @@ package test
 
 import "testing"
 
-// ABC is func1
-
 // TestABC is func test
-// abcd
+// ABC is func1
+// fn testing
+// Created at 13-11-2019 by tam gh
 func TestABC(t *testing.T) {
 	type args struct {
 		in int
-		x  int
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases 11.
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		if err := ABC(tt.args.in); (err != nil) != tt.wantErr {

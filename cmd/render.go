@@ -20,7 +20,6 @@ var (
 
 func init() {
 	initEmptyTmpls()
-	bindata.AssetZip()
 	for _, name := range bindata.AssetNames() {
 		fmt.Println("name:~", name)
 		tmpls = template.Must(tmpls.Parse(bindata.FSMustString(false, name)))
