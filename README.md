@@ -1,6 +1,6 @@
 # cest
 [![Build Status](https://travis-ci.com/codehand/cest.svg?token=xSfYAJ5sB8Z6maxH16Mj&branch=master)](https://travis-ci.com/codehand/cest)
-[![codecov](https://codecov.io/gh/codehand/cest/branch/master/graph/badge.svg)](https://codecov.io/gh/codehand/cest)(https://codecov.io/gh/codehand/cest)
+[![codecov](https://codecov.io/gh/codehand/cest/branch/master/graph/badge.svg)](https://codecov.io/gh/codehand/cest)
 ## Contents
 
 * [Contents](#contents)
