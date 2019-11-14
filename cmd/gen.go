@@ -143,10 +143,10 @@ func generateTest(src Path, files []Path, opt *Options, srcPath string) (*Genera
 
 func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, error) {
 	if !IsFileExist(testPath) {
-		fmt.Println("return if not exist")
+		// fmt.Println("return if not exist")
 		return h, nil, nil
 	}
-	fmt.Println("testPath exist and check: ", testPath)
+	// fmt.Println("testPath exist and check: ", testPath)
 	tr, err := p.Parse(testPath, nil)
 	if err != nil {
 		if err == ErrEmptyFile {
@@ -157,7 +157,7 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 	}
 	var testFuncs []string
 	for _, fun := range tr.Funcs {
-		fmt.Println("fun.IsEcho 1: ", fun.IsEcho)
+		// fmt.Println("fun.IsEcho 1: ", fun.IsEcho)
 		if fun.IsEcho {
 			h.Imports = append(h.Imports, &Import{
 				Name: "",
@@ -180,10 +180,6 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp 
 			continue
 		}
 		if f.IsEcho {
-			fmt.Println("f.IsEcho: ", f.IsEcho)
-			for _, im := range h.Imports {
-				fmt.Println(len(im.Name), "~", im.Path)
-			}
 			h.Imports = append(h.Imports, &Import{
 				Name: "",
 				Path: `"github.com/codehand/cest/echo/mctx"`,

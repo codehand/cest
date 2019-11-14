@@ -116,14 +116,14 @@ func parseRegexp(s string) (*regexp.Regexp, error) {
 }
 
 func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
-	fmt.Println("generateTests:", path)
+	// fmt.Println("generateTests:", path)
 	gts, err := GenerateTests(path, opt)
 	if err != nil {
 		fmt.Fprintln(out, err.Error())
 		return
 	}
 	if len(gts) == 0 {
-		fmt.Fprintln(out, "No tests generated for", path)
+		printAction("blue+h:black", "Skip", "No tests generated for "+path)
 		return
 	}
 	for _, t := range gts {
@@ -149,7 +149,7 @@ func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool
 		}
 	}
 	for _, t := range t.Functions {
-		fmt.Fprintln(out, "Generated", t.TestName())
+		printAction("green+h:black", "Created", t.TestName())
 	}
 	if !writeOutput {
 		out.Write(t.Output)

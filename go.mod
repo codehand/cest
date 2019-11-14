@@ -7,6 +7,8 @@ require (
 	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.1.11
+	github.com/mattn/go-colorable v0.1.2
+	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
 	github.com/mjibson/esc v0.2.0 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/spf13/cast v1.3.0

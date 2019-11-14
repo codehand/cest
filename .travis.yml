@@ -16,6 +16,7 @@ script:
   - cest -all test/handler.go
   - go test ./test/... -v
   - go test ./tests/... -v
+  - go test ./... 
   - rm -rf tests
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t b0dcee8f-8bc6-4b57-a476-6bbe559ddfe5

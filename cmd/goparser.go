@@ -48,8 +48,8 @@ func (p *Parser) Parse(srcPath string, files []Path) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("srcPath: ", srcPath)
-	fmt.Println("f.Package: ", f.Package)
+	// fmt.Println("srcPath: ", srcPath)
+	// fmt.Println("f.Package: ", f.Package)
 	return &Result{
 		Header: &Header{
 			Comments: parsePkgComment(f, f.Package),
@@ -74,14 +74,14 @@ func (p *Parser) readFile(srcPath string) ([]byte, error) {
 
 func (p *Parser) parseFile(fset *token.FileSet, srcPath string) (*ast.File, error) {
 	f, err := parser.ParseFile(fset, srcPath, nil, parser.ParseComments)
-	fmt.Println("test:", len(f.Comments))
-	for _, item := range f.Comments {
-		fmt.Printf("1: %v\n", item.Text())
+	// fmt.Println("test:", len(f.Comments))
+	// for _, item := range f.Comments {
+	// 	fmt.Printf("1: %v\n", item.Text())
 
-		for _, te := range item.List {
-			fmt.Printf("2: %v\n", te.Text)
-		}
-	}
+	// 	for _, te := range item.List {
+	// 		fmt.Printf("2: %v\n", te.Text)
+	// 	}
+	// }
 	if err != nil {
 		return nil, fmt.Errorf("target parser.ParseFile(): %v", err)
 	}

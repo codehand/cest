@@ -1,2 +1,2 @@
-rm -rf handler2_test.go
-go install github.com/codehand/cest && cest -all .
+rm -rf ../cmd/tests
+go install github.com/codehand/cest && cest -all handler.go

@@ -56,7 +56,7 @@ func existOrCreateDir(src string) {
 		return
 	}
 	must(os.MkdirAll(src, 00755))
-	fmt.Println("Inserted " + src)
+	printAction("green+h:black", "Created", src)
 }
 
 func must(err error) {
