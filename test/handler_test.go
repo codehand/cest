@@ -10,7 +10,7 @@ import (
 )
 
 // TestHealthCheck3 is func test
-// Created at 13-11-2019 by tam gh
+// Created at 14-11-2019 by tam gh
 func TestHealthCheck3(t *testing.T) {
 	type args struct {
 		c echo.Context
@@ -42,6 +42,13 @@ func TestHealthCheck3(t *testing.T) {
 		}
 		if tt.scriptsFn != nil && tt.scriptsFn.AfterFn != nil {
 			// TODO: Add to do something after script.
+			rs := tt.scriptsFn.DoAfter(e)
+			assert.NotNil(t, rs)
+			for _, item := range rs {
+				assert.NoError(t, item.Error)
+				assert.NotNil(t, item.Data)
+				fmt.Printf("get*ValueOf: %v\n", item.ToString())
+			}
 		}
 	}
 }

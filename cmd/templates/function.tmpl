@@ -108,6 +108,13 @@ func {{.TestName}}(t *testing.T) {
 			{{- if and .IsEcho}}
 					if tt.scriptsFn != nil && tt.scriptsFn.AfterFn != nil {
 						// TODO: Add to do something after script.
+						rs := tt.scriptsFn.DoAfter(e)
+						assert.NotNil(t, rs)
+						for _, item := range rs {
+							assert.NoError(t, item.Error)
+							assert.NotNil(t, item.Data)
+							fmt.Printf("get*ValueOf: %v\n", item.ToString())
+						}
 					}
 			{{- end}}
 		{{- if .Subtests }} }) {{- end -}}
