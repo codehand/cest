@@ -26,7 +26,7 @@ func Files(srcPath string) ([]Path, error) {
 func dirFiles(srcPath string) ([]Path, error) {
 	ps, err := filepath.Glob(path.Join(srcPath, "*.go"))
 	if err != nil {
-		return nil, fmt.Errorf("filepath.Glob: %v\n", err)
+		return nil, fmt.Errorf("filepath.Glob: %v", err)
 	}
 	var srcPaths []Path
 	for _, p := range ps {
