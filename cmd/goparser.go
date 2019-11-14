@@ -48,6 +48,8 @@ func (p *Parser) Parse(srcPath string, files []Path) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("srcPath: ", srcPath)
+	fmt.Println("f.Package: ", f.Package)
 	return &Result{
 		Header: &Header{
 			Comments: parsePkgComment(f, f.Package),
@@ -105,7 +107,7 @@ func (p *Parser) parseFiles(fset *token.FileSet, f *ast.File, files []Path) ([]*
 
 func (p *Parser) parseFunctions(fset *token.FileSet, f *ast.File, fs []*ast.File) []*Function {
 	ul, el := p.parseTypes(fset, fs)
-	fmt.Printf("ul: %v\n", ul)
+	// fmt.Printf("ul: %v\n", ul)
 	var funcs []*Function
 	for _, d := range f.Decls {
 		fDecl, ok := d.(*ast.FuncDecl)
@@ -152,16 +154,16 @@ func parsePkgComment(f *ast.File, pkgPos token.Pos) []string {
 	// 	fmt.Println("f.cmt: ", comment.Text())
 	// }
 	for _, comment := range f.Comments {
-		fmt.Println("f.cmt: ", f.Name.End())
+		// fmt.Println("f.cmt: ", f.Name.End())
 		// var pkg token.Pos(len(f.Name.String())
 		if comment.End() <= f.Name.End() {
-			fmt.Println("f.end: ", comment.End())
-			fmt.Println("f.pkgPos: ", pkgPos)
-			fmt.Println("skip")
+			// fmt.Println("f.end: ", comment.End())
+			// fmt.Println("f.pkgPos: ", pkgPos)
+			// fmt.Println("skip")
 			break
 		}
 		for _, c := range comment.List {
-			fmt.Printf("f.c: %s - %v\n", c.Text, c.End())
+			// fmt.Printf("f.c: %s - %v\n", c.Text, c.End())
 			count += len(c.Text) + 1 // +1 for '\n'
 			if count < int(c.End()) {
 				// n := int(c.End()) - count - 1
