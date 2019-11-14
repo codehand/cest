@@ -11,11 +11,11 @@ import (
 func Files(srcPath string) ([]Path, error) {
 	srcPath, err := filepath.Abs(srcPath)
 	if err != nil {
-		return nil, fmt.Errorf("filepath.Abs: %v\n", err)
+		return nil, fmt.Errorf("filepath.Abs: %v", err)
 	}
 	var fi os.FileInfo
 	if fi, err = os.Stat(srcPath); err != nil {
-		return nil, fmt.Errorf("os.Stat: %v\n", err)
+		return nil, fmt.Errorf("os.Stat: %v", err)
 	}
 	if fi.IsDir() {
 		return dirFiles(srcPath)
@@ -49,4 +49,18 @@ func file(srcPath string) ([]Path, error) {
 
 func isHiddenFile(path string) bool {
 	return []rune(filepath.Base(path))[0] == '.'
+}
+
+func existOrCreateDir(src string) {
+	if _, err := os.Stat(src); !os.IsNotExist(err) {
+		return
+	}
+	must(os.MkdirAll(src, 00755))
+	fmt.Println("Inserted " + src)
+}
+
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

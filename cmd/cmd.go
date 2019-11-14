@@ -6,7 +6,9 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
+	"runtime"
 )
 
 const newFilePerm os.FileMode = 0644
@@ -14,6 +16,12 @@ const newFilePerm os.FileMode = 0644
 const (
 	specifyFlagMessage = "Please specify either the -only, -excl, -exported, or -all flag"
 	specifyFileMessage = "Please specify a file or directory containing the source"
+)
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	Basepath   = filepath.Dir(b)
+	Testpath   = Basepath + "/tests"
 )
 
 type OptionsCMD struct {
@@ -26,6 +34,7 @@ type OptionsCMD struct {
 	WriteOutput        bool   // Write output to test file(s).
 	TemplateDir        string // Path to custom template set
 	TemplateParamsPath string // Path to custom paramters json file(s).
+	OutputDir          string // Path output test
 }
 
 // Generates tests for the Go files defined in args with the given OptionsCMD.
@@ -80,6 +89,9 @@ func parseOptionsCMD(out io.Writer, opt *OptionsCMD) *Options {
 		}
 	}
 
+	if opt.OutputDir != "default" {
+		// to do
+	}
 	return &Options{
 		Only:           onlyRE,
 		Exclude:        exclRE,
@@ -88,6 +100,7 @@ func parseOptionsCMD(out io.Writer, opt *OptionsCMD) *Options {
 		Subtests:       opt.Subtests,
 		TemplateDir:    opt.TemplateDir,
 		TemplateParams: templateParams,
+		OutputDir:      opt.OutputDir,
 	}
 }
 
@@ -114,11 +127,14 @@ func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
 		return
 	}
 	for _, t := range gts {
-		outputTest(out, t, writeOutput)
+		outputTest(out, t, writeOutput, opt.OutputDefault())
 	}
 }
 
-func outputTest(out io.Writer, t *GeneratedTest, writeOutput bool) {
+func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool) {
+	if defaultOutput {
+		existOrCreateDir(Testpath)
+	}
 	if writeOutput {
 		if IsFileExist(t.Path) {
 			if err := ioutil.WriteFile(t.Path, t.Output, newFilePerm); err != nil {

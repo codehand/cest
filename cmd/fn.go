@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 	"unicode"
 )
@@ -34,9 +35,9 @@ func (f *Field) IsWriter() bool {
 	return f.Type.IsWriter
 }
 
-func (f *Field) IsEcho() bool {
-	return true
-}
+// func (f *Field) IsEcho() bool {
+// 	return true
+// }
 
 func (f *Field) IsStruct() bool {
 	return strings.HasPrefix(f.Type.Underlying, "struct")
@@ -72,6 +73,7 @@ type Receiver struct {
 
 type Function struct {
 	Name         string
+	Package      string
 	Comments     []string
 	IsExported   bool
 	Receiver     *Receiver
@@ -81,6 +83,12 @@ type Function struct {
 	IsEcho       bool
 }
 
+func (f *Function) PackageName() string {
+	if f.Package != "" {
+		return fmt.Sprintf("%s.", f.Package)
+	}
+	return f.Package
+}
 func (f *Function) TestParameters() []*Field {
 	var ps []*Field
 	for _, p := range f.Parameters {
@@ -169,13 +177,21 @@ type Path string
 func (p Path) TestPath() string {
 	if !p.IsTestPath() {
 		path := strings.TrimSuffix(string(p), ".go") + "_test.go"
-		// if IsFileExist(path) {
-		// 	return strings.TrimSuffix(string(p), ".go") + fmt.Sprintf("_%v_test.go", time.Now().Unix())
-		// }
+
 		return path
 	}
 	return string(p)
 }
+
+func (p Path) TestPathDefault() string {
+	if !p.IsTestPath() {
+		path := strings.TrimSuffix(Testpath+"/"+string(p), ".go") + "_test.go"
+		return path
+	}
+	return string(p)
+}
+
+//
 
 func (p Path) IsTestPath() bool {
 	return strings.HasSuffix(string(p), "_test.go")

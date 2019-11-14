@@ -212,13 +212,13 @@ var _escData = map[string]*_escFile{
 	"/templates/call.tmpl": {
 		name:    "call.tmpl",
 		local:   "templates/call.tmpl",
-		size:    277,
-		modtime: 1573661648,
+		size:    293,
+		modtime: 1573728549,
 		compressed: `
-H4sIAAAAAAAC/0yOS0oEQQyGrxKGXigMOYDg0sVsRFR0Haoy04HqaknFFyF3l2pay1Xgz/c/3DOfpTIc
-EpVyiHD/FJsBHzmxfLB2Rc5QVwM8tSfT92QRZujONffvLwkYMVS8p4UjrjY31dzdd2leI5J9uXNp3DGl
-emGY5AgTF7i5BXwgpYWNte3Vk0Qc4S94jHlVsT7QDEkvbXRvEX3ORuPz9xvjqb2QCmVJEYiD/X+u9/sT
-AAD//0+Tk0EVAQAA
+H4sIAAAAAAAC/0yOzUpDMRCFX2Uod6FQ5gEEly66kaKi6yF3ejuYpjIZ/xjm3SXxaro6ycnHyec+80EK
+wyZRzpsI90+xI+ADJ5YP1tbIAcrZAHf10fQ9WYQZunOZ2+sfCRgxWtxTeqWF7+nE/f57uOprVOa2dpeO
+54hkX+6ca8eUysIwyRYmznBzC7gnpRMba11VJonYwv9HQ+5FxZqwGZIudbj0iabXaXz6fmPc1WdSoVlS
+BOJgL+N6zZ8AAAD//5cjH10lAQAA
 `,
 	},
 
