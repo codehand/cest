@@ -123,7 +123,7 @@ func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
 		return
 	}
 	if len(gts) == 0 {
-		printAction("blue+h:black", "Skip", "No tests generated for "+path)
+		printAction("blue+h:black", "Skip", "No tests generated for ", path)
 		return
 	}
 	for _, t := range gts {
@@ -148,8 +148,8 @@ func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool
 			}
 		}
 	}
-	for _, t := range t.Functions {
-		printAction("green+h:black", "Created", t.TestName())
+	for _, tf := range t.Functions {
+		printAction("green+h:black", "Created", tf.TestName(), t.Path)
 	}
 	if !writeOutput {
 		out.Write(t.Output)

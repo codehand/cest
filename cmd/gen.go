@@ -39,7 +39,9 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt.Importer == nil || opt.Importer() == nil {
 		opt.Importer = importer.Default
 	}
-	if srcPath == "..." {
+	// fmt.Println("srcPath: ", srcPath)
+	if srcPath == "../.." {
+		srcPath = "."
 		rootFiles, err := RootFiles(srcPath)
 		if err != nil {
 			panic(err)
@@ -47,14 +49,16 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		// current is [0]
 		lst := make([]*GeneratedTest, 0)
 		for _, rt := range rootFiles {
-			fmt.Println(string(rt))
+			// fmt.Println(string(rt))
 			scFiles, err := Files(string(rt))
 			if err != nil {
+				panic(err)
 				//return nil, fmt.Errorf("Files: %v", err)
 			}
 
 			scfiles, err := Files(path.Dir(string(rt)))
 			if err != nil {
+				panic(err)
 				//return nil, fmt.Errorf("Files: %v", err)
 			}
 

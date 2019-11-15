@@ -21,8 +21,10 @@ func RootFiles(srcPath string) ([]Path, error) {
 		// return dirFiles(srcPath)
 	}
 
+	// fmt.Println("tamnt")
 	var files []Path
 	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
+		// fmt.Println("zz: ", path)
 		if info.IsDir() {
 			return nil
 		}
@@ -87,7 +89,7 @@ func existOrCreateDir(src string) {
 		return
 	}
 	must(os.MkdirAll(src, 00755))
-	printAction("green+h:black", "Created", src)
+	printAction("green+h:black", "Created", "Dir", src)
 }
 
 func must(err error) {
