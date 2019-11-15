@@ -35,7 +35,7 @@ func main() {
 	e.Use(middleware.RequestID())
 	e.GET("/healthcheck", handler.HealthCheck)
 
-	err = e.Start(":9090")
+	err := e.Start(":9090")
 	if err != nil {
 		panic(err)
 	}

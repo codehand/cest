@@ -36,14 +36,35 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt == nil {
 		opt = &Options{}
 	}
+	if opt.Importer == nil || opt.Importer() == nil {
+		opt.Importer = importer.Default
+	}
 	if srcPath == "." {
 		rootFiles, err := RootFiles(srcPath)
 		if err != nil {
 			panic(err)
 		}
 		// current is [0]
-		// scan option refix .go
-		fmt.Println(len(rootFiles))
+		lst := make([]*GeneratedTest, 0)
+		for _, rt := range rootFiles {
+			fmt.Println(string(rt))
+			scFiles, err := Files(string(rt))
+			if err != nil {
+				//return nil, fmt.Errorf("Files: %v", err)
+			}
+
+			scfiles, err := Files(path.Dir(string(rt)))
+			if err != nil {
+				//return nil, fmt.Errorf("Files: %v", err)
+			}
+
+			if sfs, err := parallelize(scFiles, scfiles, opt, string(rt)); err == nil {
+				for _, item := range sfs {
+					lst = append(lst, item)
+				}
+			}
+		}
+		return lst, nil
 	}
 	srcFiles, err := Files(srcPath)
 	if err != nil {
@@ -55,9 +76,9 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		return nil, fmt.Errorf("Files: %v", err)
 	}
 
-	if opt.Importer == nil || opt.Importer() == nil {
-		opt.Importer = importer.Default
-	}
+	// if opt.Importer == nil || opt.Importer() == nil {
+	// 	opt.Importer = importer.Default
+	// }
 	return parallelize(srcFiles, files, opt, srcPath)
 }
 
@@ -181,7 +202,7 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
-		fmt.Println("tamnt: ", f.Name, "~", isUnexported(f, exp))
+		// fmt.Println("tamnt: ", f.Name, "~", isUnexported(f, exp))
 		if isTestFunction(f, testFuncs) || isExcluded(f, excl) || isUnexported(f, exp) || !isIncluded(f, only) || isInvalid(f) {
 			continue
 		}

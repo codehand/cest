@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func RootFiles(srcPath string) ([]string, error) {
+func RootFiles(srcPath string) ([]Path, error) {
 	srcPath, err := filepath.Abs(srcPath)
 	if err != nil {
 		return nil, fmt.Errorf("filepath.Abs: %v", err)
@@ -21,22 +21,19 @@ func RootFiles(srcPath string) ([]string, error) {
 		// return dirFiles(srcPath)
 	}
 
-	var files []string
+	var files []Path
 	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
-		if filepath.Ext(path) != ".go" || isHiddenFile(path) || strings.Contains(path, "_test.go") {
+		if filepath.Ext(path) != ".go" || isHiddenFile(path) || strings.HasSuffix(string(path), "_test.go") {
 			return nil
 		}
-		files = append(files, path)
+		files = append(files, Path(path))
 		return nil
 	})
 	if err != nil {
-		panic(err)
-	}
-	for _, file := range files {
-		fmt.Println(file)
+		return nil, err
 	}
 	return files, nil
 }
