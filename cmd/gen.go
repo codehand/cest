@@ -42,27 +42,25 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	// fmt.Println("srcPath: ", srcPath)
 	if srcPath == "../.." {
 		srcPath = "."
-		rootFiles, err := RootFiles(srcPath)
+		rootFiles, rootPath, err := RootFiles(srcPath)
 		if err != nil {
 			panic(err)
 		}
 		// current is [0]
+
 		lst := make([]*GeneratedTest, 0)
 		for _, rt := range rootFiles {
-			// fmt.Println(string(rt))
 			scFiles, err := Files(string(rt))
 			if err != nil {
 				panic(err)
-				//return nil, fmt.Errorf("Files: %v", err)
 			}
 
 			scfiles, err := Files(path.Dir(string(rt)))
 			if err != nil {
 				panic(err)
-				//return nil, fmt.Errorf("Files: %v", err)
 			}
 
-			if sfs, err := parallelize(scFiles, scfiles, opt, string(rt)); err == nil {
+			if sfs, err := parallelize(scFiles, scfiles, opt, string(rt), rootPath); err == nil {
 				for _, item := range sfs {
 					lst = append(lst, item)
 				}
@@ -80,10 +78,7 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		return nil, fmt.Errorf("Files: %v", err)
 	}
 
-	// if opt.Importer == nil || opt.Importer() == nil {
-	// 	opt.Importer = importer.Default
-	// }
-	return parallelize(srcFiles, files, opt, srcPath)
+	return parallelize(srcFiles, files, opt, srcPath, "")
 }
 
 // result stores a generateTest result.
@@ -93,7 +88,7 @@ type result struct {
 }
 
 // parallelize generates tests for the given source files concurrently.
-func parallelize(srcFiles, files []Path, opt *Options, srcPath string) ([]*GeneratedTest, error) {
+func parallelize(srcFiles, files []Path, opt *Options, srcPath, rootPath string) ([]*GeneratedTest, error) {
 	var wg sync.WaitGroup
 	rs := make(chan *result, len(srcFiles))
 	for _, src := range srcFiles {
@@ -102,7 +97,7 @@ func parallelize(srcFiles, files []Path, opt *Options, srcPath string) ([]*Gener
 		go func(src Path) {
 			defer wg.Done()
 			r := &result{}
-			r.gt, r.err = generateTest(src, files, opt, srcPath)
+			r.gt, r.err = generateTest(src, files, opt, srcPath, rootPath)
 			rs <- r
 		}(src)
 	}
@@ -128,7 +123,7 @@ func readResults(rs <-chan *result) ([]*GeneratedTest, error) {
 	return gts, nil
 }
 
-func generateTest(src Path, files []Path, opt *Options, srcPath string) (*GeneratedTest, error) {
+func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string) (*GeneratedTest, error) {
 	p := &Parser{Importer: opt.Importer()}
 	sr, err := p.Parse(string(src), files)
 
@@ -138,21 +133,22 @@ func generateTest(src Path, files []Path, opt *Options, srcPath string) (*Genera
 	h := sr.Header
 	h.Code = nil // Code is only needed from parsed test files.
 	testPath := Path(src).TestPath()
+	// output
 	if opt.OutputCustomDefault() {
-		testPath = Path(srcPath).TestPathDefault()
+		testPath = Path(src).TestPathDefault(rootPath, opt.OutputDir)
 	}
 
 	h, tf, err := parseTestFile(p, testPath, h)
 	if err != nil {
 		return nil, err
 	}
-
 	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, opt.OutputCustomDefault(), tf)
-	if len(funcs) == 0 {
+	if len(funcs) == 0 || h.Package == "main" {
 		return nil, nil
 	}
+
 	if opt.OutputCustomDefault() {
-		h.Package = "tests"
+		h.Package = "tests" // CHECK
 	}
 	b, err := ProcessOutput(h, funcs, &OptionsOutput{
 		PrintInputs:    opt.PrintInputs,
@@ -206,7 +202,6 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
-		// fmt.Println("tamnt: ", f.Name, "~", isUnexported(f, exp))
 		if isTestFunction(f, testFuncs) || isExcluded(f, excl) || isUnexported(f, exp) || !isIncluded(f, only) || isInvalid(f) {
 			continue
 		}

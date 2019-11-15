@@ -8,14 +8,15 @@ import (
 	"strings"
 )
 
-func RootFiles(srcPath string) ([]Path, error) {
+func RootFiles(srcPath string) ([]Path, string, error) {
+	var rt = ""
 	srcPath, err := filepath.Abs(srcPath)
 	if err != nil {
-		return nil, fmt.Errorf("filepath.Abs: %v", err)
+		return nil, rt, fmt.Errorf("filepath.Abs: %v", err)
 	}
 	var fi os.FileInfo
 	if fi, err = os.Stat(srcPath); err != nil {
-		return nil, fmt.Errorf("os.Stat: %v", err)
+		return nil, rt, fmt.Errorf("os.Stat: %v", err)
 	}
 	if fi.IsDir() {
 		// return dirFiles(srcPath)
@@ -23,8 +24,12 @@ func RootFiles(srcPath string) ([]Path, error) {
 
 	// fmt.Println("tamnt")
 	var files []Path
+	var lop = true
 	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
-		// fmt.Println("zz: ", path)
+		if lop {
+			rt = path
+			lop = false
+		}
 		if info.IsDir() {
 			return nil
 		}
@@ -35,9 +40,9 @@ func RootFiles(srcPath string) ([]Path, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, rt, err
 	}
-	return files, nil
+	return files, rt, nil
 }
 
 // Files returns all the Golang files for the given path. Ignores hidden files.
@@ -89,7 +94,24 @@ func existOrCreateDir(src string) {
 		return
 	}
 	must(os.MkdirAll(src, 00755))
-	printAction("green+h:black", "Created", "Dir", src)
+	printAction("green+h:black", "Created", ">> dir", src)
+}
+
+func existedDir(src string) bool {
+	_, err := os.Stat(filepath.Dir(src))
+	return err == nil
+}
+func ensureDir(src string) {
+	srcN := filepath.Dir(src)
+	// fmt.Println("src: ", srcN)
+	if _, err := os.Stat(srcN); err != nil {
+		err := os.MkdirAll(srcN, 00755)
+		if err != nil {
+			// panic(err)
+			return
+		}
+		printAction("green+h:black", "Created", ">> file", src)
+	}
 }
 
 func must(err error) {

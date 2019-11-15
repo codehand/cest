@@ -186,9 +186,10 @@ func (p Path) TestPath() string {
 	return string(p)
 }
 
-func (p Path) TestPathDefault() string {
+func (p Path) TestPathDefault(dest, name string) string {
 	if !p.IsTestPath() {
-		path := strings.TrimSuffix(Testpath+"/"+string(p), ".go") + "_test.go"
+		q := string(p)
+		path := strings.TrimSuffix(string(dest+"/"+name+q[len(dest):len(q)]), ".go") + "_test.go"
 		return path
 	}
 	return string(p)

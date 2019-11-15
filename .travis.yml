@@ -22,6 +22,8 @@ script:
   - go test ./... -v
   - cest -all ...
   - go test ./... -v
+  - cest -all -output=tests  ...
+  - go test ./tests/... -v
   # - cest -all example/handler/handler.go
   # - go test ./example/handler/... -v
   # - cest -all test/handler.go

@@ -127,15 +127,26 @@ func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
 		return
 	}
 	for _, t := range gts {
+		// fmt.Println("fs: ", len(t.Functions))
+		// fmt.Println("fout: ", string(t.Output))
 		outputTest(out, t, writeOutput, opt.OutputCustomDefault())
 	}
 }
 
 func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool) {
-	if defaultOutput {
-		existOrCreateDir(Testpath)
-	}
+	// check
+
+	// if defaultOutput {
+	// 	existOrCreateDir(Testpath)
+	// }
+
 	if writeOutput {
+		ensureDir(t.Path)
+		if !existedDir(t.Path) {
+			printAction("blue+h:black", "Skip", "Not found dir", t.Path)
+			return
+		}
+
 		if IsFileExist(t.Path) {
 			if err := ioutil.WriteFile(t.Path, t.Output, newFilePerm); err != nil {
 				fmt.Fprintln(out, err)
