@@ -127,7 +127,7 @@ func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
 		return
 	}
 	for _, t := range gts {
-		outputTest(out, t, writeOutput, opt.OutputDefault())
+		outputTest(out, t, writeOutput, opt.OutputCustomDefault())
 	}
 }
 

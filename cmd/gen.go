@@ -22,8 +22,8 @@ type Options struct {
 	OutputDir      string
 }
 
-func (p *Options) OutputDefault() bool {
-	return p.OutputDir == "default"
+func (p *Options) OutputCustomDefault() bool {
+	return p.OutputDir != "."
 }
 
 type GeneratedTest struct {
@@ -108,7 +108,7 @@ func generateTest(src Path, files []Path, opt *Options, srcPath string) (*Genera
 	h := sr.Header
 	h.Code = nil // Code is only needed from parsed test files.
 	testPath := Path(src).TestPath()
-	if opt.OutputDefault() {
+	if opt.OutputCustomDefault() {
 		testPath = Path(srcPath).TestPathDefault()
 	}
 
