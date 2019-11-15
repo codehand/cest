@@ -117,11 +117,11 @@ func generateTest(src Path, files []Path, opt *Options, srcPath string) (*Genera
 		return nil, err
 	}
 
-	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, tf)
+	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, opt.OutputCustomDefault(), tf)
 	if len(funcs) == 0 {
 		return nil, nil
 	}
-	if !opt.Subtests {
+	if opt.OutputCustomDefault() {
 		h.Package = "tests"
 	}
 	b, err := ProcessOutput(h, funcs, &OptionsOutput{
@@ -172,7 +172,7 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 	return h, testFuncs, nil
 }
 
-func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp bool, testFuncs []string) ([]*Function, *Header) {
+func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp, out bool, testFuncs []string) ([]*Function, *Header) {
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
@@ -185,7 +185,9 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp 
 				Path: `"github.com/codehand/cest/echo/mctx"`,
 			})
 		}
-		f.Package = h.Package
+		if out {
+			f.Package = h.Package
+		}
 		fs = append(fs, f)
 	}
 	return fs, h

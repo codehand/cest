@@ -13,11 +13,14 @@ script:
   - go install github.com/codehand/cest
   - rm -rf tests
   - rm -rf test/handler_test.go
-  - cest -all test/handler.go
-  - go fmt
-  - go test ./test/... -v
-  - go test ./tests/... -v
-  - go test ./... 
-  - rm -rf tests
+  - rm -rf example/handler/handler_*
+  - cest -all example/handler/handler.go
+  - go test ./example/handler/... -v
+  # - cest -all test/handler.go
+  # - go fmt
+  # - go test ./test/... -v
+  # - go test ./tests/... -v
+  # - go test ./... 
+  # - rm -rf tests
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t b0dcee8f-8bc6-4b57-a476-6bbe559ddfe5
