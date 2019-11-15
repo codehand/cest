@@ -40,6 +40,8 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		opt.Importer = importer.Default
 	}
 	fmt.Println("srcPath: ", srcPath)
+	// linux support char `...`
+	// unix support char `../..`
 	if srcPath == "../.." || srcPath == "..." {
 		srcPath = "."
 		rootFiles, rootPath, err := RootFiles(srcPath)
