@@ -5,7 +5,41 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
+
+func RootFiles(srcPath string) ([]string, error) {
+	srcPath, err := filepath.Abs(srcPath)
+	if err != nil {
+		return nil, fmt.Errorf("filepath.Abs: %v", err)
+	}
+	var fi os.FileInfo
+	if fi, err = os.Stat(srcPath); err != nil {
+		return nil, fmt.Errorf("os.Stat: %v", err)
+	}
+	if fi.IsDir() {
+		// return dirFiles(srcPath)
+	}
+
+	var files []string
+	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		if filepath.Ext(path) != ".go" || isHiddenFile(path) || strings.Contains(path, "_test.go") {
+			return nil
+		}
+		files = append(files, path)
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		fmt.Println(file)
+	}
+	return files, nil
+}
 
 // Files returns all the Golang files for the given path. Ignores hidden files.
 func Files(srcPath string) ([]Path, error) {

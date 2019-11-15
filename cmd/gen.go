@@ -36,6 +36,15 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt == nil {
 		opt = &Options{}
 	}
+	if srcPath == "." {
+		rootFiles, err := RootFiles(srcPath)
+		if err != nil {
+			panic(err)
+		}
+		// current is [0]
+		// scan option refix .go
+		fmt.Println(len(rootFiles))
+	}
 	srcFiles, err := Files(srcPath)
 	if err != nil {
 		return nil, fmt.Errorf("Files: %v", err)
