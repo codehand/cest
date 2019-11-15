@@ -11,11 +11,15 @@ before_install:
   - chmod 600 .netrc
 script:
   - go install github.com/codehand/cest
-  - rm -rf tests
-  - rm -rf test/handler_test.go
-  - rm -rf example/handler/handler_*
-  - cest -all example/handler/handler.go
-  - go test ./example/handler/... -v
+  # - rm -rf tests
+  # - rm -rf test/handler_test.go
+  # - rm -rf example/handler/handler_*
+  - cd example
+  - rm -rf *_test.go
+  - cest -all .
+  - go test ./... -v
+  # - cest -all example/handler/handler.go
+  # - go test ./example/handler/... -v
   # - cest -all test/handler.go
   # - go fmt
   # - go test ./test/... -v
