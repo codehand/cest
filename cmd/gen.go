@@ -40,7 +40,7 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		opt.Importer = importer.Default
 	}
 	fmt.Println("srcPath: ", srcPath)
-	if srcPath == "../.." {
+	if srcPath == "../.." || srcPath == "..." {
 		srcPath = "."
 		rootFiles, rootPath, err := RootFiles(srcPath)
 		if err != nil {
