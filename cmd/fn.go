@@ -83,6 +83,9 @@ type Function struct {
 	IsEcho       bool
 }
 
+func (f *Function) IsPrivate() bool {
+	return true
+}
 func (f *Function) PackageName() string {
 	if f.Package != "" {
 		return fmt.Sprintf("%s.", f.Package)

@@ -42,3 +42,7 @@ func main() {
 		panic(err)
 	}
 }
+
+func ABC() {
+
+}

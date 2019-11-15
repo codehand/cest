@@ -98,10 +98,6 @@ func generateTest(src Path, files []Path, opt *Options, srcPath string) (*Genera
 	p := &Parser{Importer: opt.Importer()}
 	sr, err := p.Parse(string(src), files)
 
-	// for _, item := range sr.Funcs {
-	// 	fmt.Printf("func: %v\n", item)
-	// }
-
 	if err != nil {
 		return nil, fmt.Errorf("Parser.Parse source file: %v", err)
 	}
@@ -176,6 +172,7 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
+		fmt.Println("tamnt: ", f.Name, "~", isUnexported(f, exp))
 		if isTestFunction(f, testFuncs) || isExcluded(f, excl) || isUnexported(f, exp) || !isIncluded(f, only) || isInvalid(f) {
 			continue
 		}
@@ -209,7 +206,13 @@ func isExcluded(f *Function, excl *regexp.Regexp) bool {
 }
 
 func isUnexported(f *Function, exp bool) bool {
-	return exp && !f.IsExported
+	if !f.IsExported {
+		if exp {
+			return false
+		}
+		return true
+	}
+	return false
 }
 
 func isIncluded(f *Function, only *regexp.Regexp) bool {
