@@ -23,7 +23,7 @@ script:
   - cest -all ...
   - go test ./... -v
   - cest -all -output=tests  ...
-  - go test ./tests/... -v
+  - go test ./... -v
   # - cest -all example/handler/handler.go
   # - go test ./example/handler/... -v
   # - cest -all test/handler.go
