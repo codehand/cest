@@ -15,8 +15,10 @@ script:
   # - rm -rf test/handler_test.go
   # - rm -rf example/handler/handler_*
   - cd example
-  - rm -rf *_test.go
+  - rm -f **/*_test.go
   - cest -all .
+  - go test ./... -v
+  - cest -all ...
   - go test ./... -v
   # - cest -all example/handler/handler.go
   # - go test ./example/handler/... -v
