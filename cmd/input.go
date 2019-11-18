@@ -22,19 +22,22 @@ func RootFiles(srcPath string) ([]Path, string, error) {
 		// return dirFiles(srcPath)
 	}
 
-	// fmt.Println("tamnt")
+	fmt.Println("isDir:", fi.IsDir())
+
 	var files []Path
 	var lop = true
 	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
-		if lop {
-			rt = path
-			lop = false
-		}
-		if info.IsDir() {
+		fmt.Println("zzz:", srcPath)
+
+		if info.IsDir() || info.Name() == ".git" {
 			return nil
 		}
 		if filepath.Ext(path) != ".go" || isHiddenFile(path) || strings.HasSuffix(string(path), "_test.go") {
 			return nil
+		}
+		if lop {
+			rt = path
+			lop = false
 		}
 		files = append(files, Path(path))
 		return nil
@@ -103,7 +106,7 @@ func existedDir(src string) bool {
 }
 func ensureDir(src string) {
 	srcN := filepath.Dir(src)
-	// fmt.Println("src: ", srcN)
+	fmt.Println("src: ", srcN)
 	if _, err := os.Stat(srcN); err != nil {
 		err := os.MkdirAll(srcN, 00755)
 		if err != nil {
@@ -114,8 +117,39 @@ func ensureDir(src string) {
 	}
 }
 
+func getParentDir(src string) string {
+	return filepath.Dir(src)
+}
+
 func must(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// FileExists reports whether the named file exists as a boolean
+func fileExists(name string) bool {
+	if fi, err := os.Stat(name); err == nil {
+		if fi.Mode().IsRegular() {
+			return true
+		}
+	}
+	return false
+}
+
+// DirExists reports whether the dir exists as a boolean
+func dirExists(name string) bool {
+	if fi, err := os.Stat(name); err == nil {
+		if fi.Mode().IsDir() {
+			return true
+		}
+	}
+	return false
+}
+
+func fileMode(name string) int {
+	if fileExists(name) {
+		return 1
+	}
+	return 2
 }

@@ -189,6 +189,13 @@ func (p Path) TestPath() string {
 func (p Path) TestPathDefault(dest, name string) string {
 	if !p.IsTestPath() {
 		q := string(p)
+		if !dirExists(dest) {
+			fmt.Println("============")
+			dest = getParentDir(dest)
+		}
+		fmt.Println("p1: ", q)
+		fmt.Println("dest: ", dest)
+		fmt.Println("name: ", name)
 		path := strings.TrimSuffix(string(dest+"/"+name+q[len(dest):len(q)]), ".go") + "_test.go"
 		return path
 	}

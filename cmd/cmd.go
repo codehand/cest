@@ -117,6 +117,8 @@ func parseRegexp(s string) (*regexp.Regexp, error) {
 
 func generateTests(out io.Writer, path string, writeOutput bool, opt *Options) {
 	// fmt.Println("generateTests:", path)
+	curPath, _ := os.Getwd()
+	opt.CurrentDir = curPath
 	gts, err := GenerateTests(path, opt)
 	if err != nil {
 		fmt.Fprintln(out, err.Error())
@@ -142,6 +144,7 @@ func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool
 
 	if writeOutput {
 		ensureDir(t.Path)
+		fmt.Println("t.Path:", t.Path)
 		if !existedDir(t.Path) {
 			printAction("blue+h:black", "Skip", "Not found dir", t.Path)
 			return

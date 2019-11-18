@@ -10,8 +10,8 @@ import (
 var out = colorable.NewColorableStdout()
 
 func printAction(color, action, target, path string) {
-	if l := len(path); l > 40 {
-		path = "..." + path[l-40:l]
+	if l := len(path); l > 60 {
+		path = "..." + path[l-60:l]
 	}
 	if l := len(target); l > 25 {
 		target = target[0:15] + "..."
@@ -20,5 +20,5 @@ func printAction(color, action, target, path string) {
 		target = target[0:8] + ".."
 	}
 
-	fmt.Fprintf(out, "	%-10s  %-28s  \t%43s\n", ansi.Color(action, color), target, path)
+	fmt.Fprintf(out, "	%-10s  %-28s  \t%63s\n", ansi.Color(action, color), target, path)
 }

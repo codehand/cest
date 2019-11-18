@@ -20,6 +20,7 @@ type Options struct {
 	TemplateDir    string
 	TemplateParams map[string]interface{}
 	OutputDir      string
+	CurrentDir     string
 }
 
 func (p *Options) OutputCustomDefault() bool {
@@ -39,15 +40,18 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt.Importer == nil || opt.Importer() == nil {
 		opt.Importer = importer.Default
 	}
-	fmt.Println("srcPath: ", srcPath)
+	// fmt.Println("src output: ", srcPath)
+
 	// linux support char `...`
 	// unix support char `../..`
+	rootFiles, rootPath, err := RootFiles(srcPath)
+	if err != nil {
+		panic(err)
+	}
+
 	if srcPath == "../.." || srcPath == "..." {
 		srcPath = "."
-		rootFiles, rootPath, err := RootFiles(srcPath)
-		if err != nil {
-			panic(err)
-		}
+
 		// current is [0]
 
 		lst := make([]*GeneratedTest, 0)
@@ -80,7 +84,7 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 		return nil, fmt.Errorf("Files: %v", err)
 	}
 
-	return parallelize(srcFiles, files, opt, srcPath, "")
+	return parallelize(srcFiles, files, opt, srcPath, opt.CurrentDir)
 }
 
 // result stores a generateTest result.
@@ -140,6 +144,7 @@ func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string
 		testPath = Path(src).TestPathDefault(rootPath, opt.OutputDir)
 	}
 
+	// fmt.Println("test abc:", testPath)
 	h, tf, err := parseTestFile(p, testPath, h)
 	if err != nil {
 		return nil, err
