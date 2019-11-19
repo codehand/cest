@@ -40,7 +40,7 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt.Importer == nil || opt.Importer() == nil {
 		opt.Importer = importer.Default
 	}
-	// fmt.Println("src output: ", srcPath)
+	fmt.Println("src output: ", srcPath)
 
 	// linux support char `...`
 	// unix support char `../..`
