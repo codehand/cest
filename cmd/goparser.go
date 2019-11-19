@@ -44,8 +44,8 @@ func (p *Parser) Parse(srcPath string, files []Path) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("f.srcPath: ", srcPath)
-	fmt.Println("f.Package: ", f.Name.String())
+	// fmt.Println("f.srcPath: ", srcPath)
+	// fmt.Println("f.Package: ", f.Name.String())
 	fs, err := p.parseFiles(fset, f, files)
 	if err != nil {
 		return nil, err

@@ -52,7 +52,14 @@ func Run(out io.Writer, args []string, opts *OptionsCMD) {
 		fmt.Fprintln(out, specifyFileMessage)
 		return
 	}
+	if len(args) > 1 && opt.OutputDir == "." {
+		opt.IsSamePkg = true
+	}
 	for _, path := range args {
+		if path == "Makefile" {
+			continue
+		}
+		// fmt.Println("aaa:", path)
 		generateTests(out, path, opts.WriteOutput, opt)
 	}
 }

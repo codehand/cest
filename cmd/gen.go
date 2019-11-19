@@ -21,6 +21,7 @@ type Options struct {
 	TemplateParams map[string]interface{}
 	OutputDir      string
 	CurrentDir     string
+	IsSamePkg      bool
 }
 
 func (p *Options) OutputCustomDefault() bool {
@@ -40,18 +41,20 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 	if opt.Importer == nil || opt.Importer() == nil {
 		opt.Importer = importer.Default
 	}
-	fmt.Println("src output: ", srcPath)
+	// fmt.Println("src output: ", srcPath)
 
 	// linux support char `...`
 	// unix support char `../..`
-	rootFiles, rootPath, err := RootFiles(srcPath)
-	if err != nil {
-		panic(err)
-	}
 
 	if srcPath == "../.." || srcPath == "..." {
 		srcPath = "."
-
+		rootFiles, _, err := RootFiles(srcPath)
+		if err != nil {
+			panic(err)
+		}
+		if opt.OutputDir == "." {
+			opt.IsSamePkg = true
+		}
 		// current is [0]
 
 		lst := make([]*GeneratedTest, 0)
@@ -66,7 +69,7 @@ func GenerateTests(srcPath string, opt *Options) ([]*GeneratedTest, error) {
 				panic(err)
 			}
 
-			if sfs, err := parallelize(scFiles, scfiles, opt, string(rt), rootPath); err == nil {
+			if sfs, err := parallelize(scFiles, scfiles, opt, string(rt), opt.CurrentDir); err == nil {
 				for _, item := range sfs {
 					lst = append(lst, item)
 				}
@@ -152,7 +155,7 @@ func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string
 		return nil, err
 	}
 
-	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, opt.OutputCustomDefault(), tf)
+	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, opt.OutputCustomDefault(), opt.IsSamePkg, tf)
 	if len(funcs) == 0 || h.Package == "main" {
 		return nil, nil
 	}
@@ -211,7 +214,7 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 	return h, testFuncs, nil
 }
 
-func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp, out bool, testFuncs []string) ([]*Function, *Header) {
+func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp, out, sameDir bool, testFuncs []string) ([]*Function, *Header) {
 
 	sort.Strings(testFuncs)
 	var fs []*Function
@@ -225,9 +228,9 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 				Path: `"github.com/codehand/cest/echo/mctx"`,
 			})
 		}
-		// if testFuncs == nil {
-		f.Package = h.PkgName
-		// }
+		if !sameDir {
+			f.Package = h.PkgName
+		}
 		// if out {
 
 		// }

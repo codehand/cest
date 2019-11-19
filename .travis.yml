@@ -18,29 +18,7 @@ script:
   # - rm -rf tests
   # - rm -rf test/handler_test.go
   # - rm -rf example/handler/handler_*
-  - cd example
-
-  - rm -f **/*_test.go
-  - cest -all .
-  - go test ./... -v
-
-  - rm -f **/*_test.go
-  - cest -all *
-  - go test ./... -v
-
-  - rm -f **/*_test.go
-  - cest -all ...
-  - go test ./... -v
-
-  - rm -f **/*_test.go
-  - rm -rf tests
-  - cest -all -output=tests ...
-  - go test ./... -v
-
-  - rm -f **/*_test.go
-  - rm -rf tests
-  - cest -only=EchoContext -output=tests handler/abc/abc.go
-  - go test ./... -v
+  - cd example && make
   # - cest -all example/handler/handler.go
   # - go test ./example/handler/... -v
   # - cest -all test/handler.go
