@@ -304,7 +304,7 @@ func NewContext(e *echo.Echo, method, path string, params map[string]string, hea
 	}
 	if len(ks) > 0 {
 		ctx.SetParamNames(ks...)
-		ctx.SetParamNames(vs...)
+		ctx.SetParamValues(vs...)
 	}
 
 	ctx.Request().Header.Add("Content-Type", "application/json")
