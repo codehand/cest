@@ -31,7 +31,7 @@ TESTABLE	:= $(foreach pkg, $(PACKAGES), $(wildcard $(pkg)/*.go))
 GOFILES		:= $(TESTABLE) $(RUNNABLE)
 COV_FILES	:= $(foreach pkg, $(PACKAGES), $(pkg).$(COV_EXT))
 
-default:	test1 test2 test3 test4
+default:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12
 test1:
 		$(RM) -f **/*_test.go
 		cest -all .
@@ -52,5 +52,40 @@ test4:
 test5:
 		$(RM) -f **/*_test.go
 		$(RM) -rf tests
-		- cest -only=EchoContext -output=tests handler/abc/abc.go
+		cest -only=EchoContext -output=tests handler/abc/abc.go
+		go test ./... -v
+test6:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/abc/abc.go
+		go test ./... -v
+test7:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/abc/
+		go test ./... -v
+test8:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/abc
+		go test ./... -v
+test9:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/abc/*
+		go test ./... -v
+test10:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/
+		go test ./... -v
+test11:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler
+		go test ./... -v
+test12:
+		$(RM) -f **/*_test.go
+		$(RM) -rf tests
+		cest -all handler/*
 		go test ./... -v

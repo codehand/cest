@@ -61,4 +61,23 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -only=EchoContext -output=tests handler/abc/abc.go && go test ./... -v
+
+    - name: Test 6
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        cest -all handler/abc/abc.go && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler/abc/ && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler/abc && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler/abc/* && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler/ && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler && go test ./... -v
+        rm -f **/*_test.go
+        cest -all handler/* && go test ./... -v
         

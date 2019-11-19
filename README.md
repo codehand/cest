@@ -18,33 +18,18 @@
 
 
 ## Changes
-* Great support across OS's
-* Easy cross compilation with GOOS and GOARCH
-* Wrapper server echo v3 ([echo](https://echo.labstack.com/)) 
-* Multi package, version
-* Sub package handlers, skip handlers
-* Restful API/CRUD
-* Support model mongodb
-* Eye catching user interface
-* Progress bars
-* Fix static echo version
-* Handler exit process
-* Echo swagger document
+* 
 
 ## Features
-* Support gen service GRPC protocol
-* Cache redis and memory internal
-* Worker pool
-* Genarate model, handler func
-* Genarate config kube deployment
-* Auto cron job
-* Http client circuit breaker
-* Plus redis shake
-* Plus mongo shake
-* Validation http request
+* 
 
 ## Examples
 
     cest -all .
-    go get -u github.com/mjibson/esc
-    esc -o bindata/esc.go -pkg=bindata templates
+    cest -all ...
+    cest -all *
+    cest -all handler/abc/abc.go
+    cest -all handler/abc
+    cest -all -output=tests ...
+    cest -only=EchoContext -output=tests handler/abc/abc.go
+    
