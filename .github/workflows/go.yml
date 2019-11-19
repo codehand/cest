@@ -29,5 +29,6 @@ jobs:
 
     - name: Test
       run: |
+        cd example
         go install github.com/codehand/cest
-        cd example && make
+        make
