@@ -28,4 +28,4 @@ jobs:
       run: go build -v .
 
     - name: Test
-      run: make
+      run: cd example && make
