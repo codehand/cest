@@ -27,8 +27,11 @@ jobs:
     - name: Build
       run: go build -v .
 
-    - name: Test
+    - name: Test 1
       run: |
         cd example
-        go install github.com/codehand/cest
-        make
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all .
+		    go test ./... -v
+        
