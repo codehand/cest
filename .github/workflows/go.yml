@@ -80,4 +80,26 @@ jobs:
         ./cest -all handler && go test ./... -v
         rm -f **/*_test.go
         ./cest -all handler/* && go test ./... -v
+
+    - name: Test 7
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        cd handler
+        ./cest -all -output=tests . && go test ./... -v
+
+    - name: Test 8
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all -output=tests * && go test ./... -v
+
+    - name: Test 9
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all -output=tests ... && go test ./... -v
         

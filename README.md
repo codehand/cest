@@ -30,6 +30,12 @@
     cest -all *
     cest -all handler/abc/abc.go
     cest -all handler/abc
+
     cest -all -output=tests ...
+    cest -all -output=tests .
+    cest -all -output=tests *
+    cest -all -output=tests handler/abc/abc.go
+    cest -all -output=tests handler/abc
+    
     cest -only=EchoContext -output=tests handler/abc/abc.go
     
