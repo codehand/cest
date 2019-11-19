@@ -67,17 +67,17 @@ jobs:
         cd example
         go build github.com/codehand/cest
         rm -f **/*_test.go
-        cest -all handler/abc/abc.go && go test ./... -v
+        ./cest -all handler/abc/abc.go && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler/abc/ && go test ./... -v
+        ./cest -all handler/abc/ && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler/abc && go test ./... -v
+        ./cest -all handler/abc && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler/abc/* && go test ./... -v
+        ./cest -all handler/abc/* && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler/ && go test ./... -v
+        ./cest -all handler/ && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler && go test ./... -v
+        ./cest -all handler && go test ./... -v
         rm -f **/*_test.go
-        cest -all handler/* && go test ./... -v
+        ./cest -all handler/* && go test ./... -v
         
