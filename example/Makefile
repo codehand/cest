@@ -33,6 +33,7 @@ COV_FILES	:= $(foreach pkg, $(PACKAGES), $(pkg).$(COV_EXT))
 
 default:	test1 test2 test3 test4
 test1:
+		go install github.com/codehand/cest
 		$(RM) -f **/*_test.go
 		cest -all .
 		go test ./... -v
