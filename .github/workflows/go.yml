@@ -54,6 +54,7 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all -output=tests ... && go test ./... -v
+        rm -rf tests
 
     - name: Test 5
       run: |
@@ -61,6 +62,7 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -only=EchoContext -output=tests handler/abc/abc.go && go test ./... -v
+        rm -rf tests
 
     - name: Test 6
       run: |
@@ -88,6 +90,7 @@ jobs:
         rm -f **/*_test.go
         cd handler
         ./cest -all -output=tests . && go test ./... -v
+        rm -rf tests
 
     - name: Test 8
       run: |
@@ -95,6 +98,7 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all -output=tests * && go test ./... -v
+        rm -rf tests
 
     - name: Test 9
       run: |
@@ -102,6 +106,7 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all -output=tests ... && go test ./... -v
+        rm -rf tests
 
     - name: Test 10
       run: |
@@ -109,6 +114,7 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all -output=tests handler/abc/abc.go && go test ./... -v
+        rm -rf tests
 
     - name: Test 11
       run: |
@@ -116,4 +122,5 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all -output=tests handler/abc/ && go test ./... -v
+        rm -rf tests
         
