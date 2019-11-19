@@ -155,7 +155,7 @@ func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string
 	}
 
 	if opt.OutputCustomDefault() {
-		h.Package = "tests" // CHECK
+		// h.Package = "tests" // CHECK
 	}
 	b, err := ProcessOutput(h, funcs, &OptionsOutput{
 		PrintInputs:    opt.PrintInputs,

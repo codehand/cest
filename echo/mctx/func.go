@@ -47,6 +47,7 @@ type TaskFn struct {
 	Method     string
 	Host       string
 	Header     map[string]string
+	Params     map[string]string
 	Args       Args
 	Payload    interface{}
 	Result     interface{}
@@ -124,7 +125,7 @@ func (s *EchoFn) DoBefore(e *echo.Echo) []*ResultFn {
 			results = append(results, newResultFn(nil, fmt.Errorf("[E.0] hl.Fn() index %d failes because not match define result return", i)))
 			break
 		}
-		ctx, _, res := NewContext(e, hl.Method, hl.URL, hl.Header, hl.Payload)
+		ctx, _, res := NewContext(e, hl.Method, hl.URL, hl.Params, hl.Header, hl.Payload)
 		if err := hl.Fn(ctx); err != nil {
 			results = append(results, newResultFn(nil, fmt.Errorf("[E.1] hl.Fn() index %d error = %v", i, err)))
 			break
@@ -194,7 +195,7 @@ func (s *EchoFn) DoAfter(e *echo.Echo) []*ResultFn {
 			results = append(results, newResultFn(nil, fmt.Errorf("[E.0] hl.Fn() index %d failes because not match define result return", i)))
 			break
 		}
-		ctx, _, res := NewContext(e, hl.Method, hl.URL, hl.Header, hl.Payload)
+		ctx, _, res := NewContext(e, hl.Method, hl.URL, hl.Params, hl.Header, hl.Payload)
 		if err := hl.Fn(ctx); err != nil {
 			results = append(results, newResultFn(nil, fmt.Errorf("[E.1] hl.Fn() index %d error = %v", i, err)))
 			break
@@ -279,7 +280,7 @@ func (s *EchoFn) Version() string {
 }
 
 // NewContext is func new context echo
-func NewContext(e *echo.Echo, method, path string, params map[string]string, body interface{}) (echo.Context, *http.Request, *httptest.ResponseRecorder) {
+func NewContext(e *echo.Echo, method, path string, params map[string]string, headers map[string]string, body interface{}) (echo.Context, *http.Request, *httptest.ResponseRecorder) {
 	// var payload *strings.Reader = nil
 	var obj []byte
 	if body != nil && method != "GET" && method != "" {
@@ -290,9 +291,20 @@ func NewContext(e *echo.Echo, method, path string, params map[string]string, bod
 	res := httptest.NewRecorder()
 	ctx := e.NewContext(req, res)
 	ctx.SetPath(path)
-	for k, v := range params {
+	for k, v := range headers {
 		ctx.Request().Header.Add(k, v)
 	}
+	var ks []string
+	var vs []string
+	for k, v := range params {
+		ks = append(ks, k)
+		vs = append(vs, v)
+	}
+	if len(ks) > 0 {
+		ctx.SetParamNames(ks...)
+		ctx.SetParamNames(vs...)
+	}
+
 	ctx.Request().Header.Add("Content-Type", "application/json")
 	return ctx, req, res
 }

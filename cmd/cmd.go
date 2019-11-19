@@ -144,7 +144,7 @@ func outputTest(out io.Writer, t *GeneratedTest, writeOutput, defaultOutput bool
 
 	if writeOutput {
 		ensureDir(t.Path)
-		fmt.Println("t.Path:", t.Path)
+		// fmt.Println("t.Path:", t.Path)
 		if !existedDir(t.Path) {
 			printAction("blue+h:black", "Skip", "Not found dir", t.Path)
 			return

@@ -22,12 +22,12 @@ func RootFiles(srcPath string) ([]Path, string, error) {
 		// return dirFiles(srcPath)
 	}
 
-	fmt.Println("isDir:", fi.IsDir())
+	// fmt.Println("isDir:", fi.IsDir())
 
 	var files []Path
 	var lop = true
 	err = filepath.Walk(srcPath, func(path string, info os.FileInfo, err error) error {
-		fmt.Println("zzz:", srcPath)
+		// fmt.Println("zzz:", srcPath)
 
 		if info.IsDir() || info.Name() == ".git" {
 			return nil
@@ -106,7 +106,7 @@ func existedDir(src string) bool {
 }
 func ensureDir(src string) {
 	srcN := filepath.Dir(src)
-	fmt.Println("src: ", srcN)
+	// fmt.Println("src: ", srcN)
 	if _, err := os.Stat(srcN); err != nil {
 		err := os.MkdirAll(srcN, 00755)
 		if err != nil {
