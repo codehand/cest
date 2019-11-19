@@ -15,9 +15,6 @@ before_install:
   - chmod 600 .netrc
 script:
   - go install github.com/codehand/cest
-  # - rm -rf tests
-  # - rm -rf test/handler_test.go
-  # - rm -rf example/handler/handler_*
   - cd example
 
   - rm -f **/*_test.go
@@ -41,13 +38,6 @@ script:
   - rm -rf tests
   - cest -only=EchoContext -output=tests handler/abc/abc.go
   - go test ./... -v
-  # - cest -all example/handler/handler.go
-  # - go test ./example/handler/... -v
-  # - cest -all test/handler.go
-  # - go fmt
-  # - go test ./test/... -v
-  # - go test ./tests/... -v
-  # - go test ./... 
-  # - rm -rf tests
+  
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t b0dcee8f-8bc6-4b57-a476-6bbe559ddfe5
