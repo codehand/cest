@@ -33,4 +33,32 @@ jobs:
         go build github.com/codehand/cest
         rm -f **/*_test.go
         ./cest -all . && go test ./... -v
+
+    - name: Test 2
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all * && go test ./... -v
+
+    - name: Test 3
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all ... && go test ./... -v
+
+    - name: Test 4
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -all -output=tests ... && go test ./... -v
+
+    - name: Test 5
+      run: |
+        cd example
+        go build github.com/codehand/cest
+        rm -f **/*_test.go
+        ./cest -only=EchoContext -output=tests handler/abc/abc.go && go test ./... -v
         
