@@ -118,6 +118,7 @@ func (r *ResultFn) pointer() reflect.Type {
 	return reflect.PtrTo(v.Type())
 }
 
+// DoBefore ...
 func (s *EchoFn) DoBefore(e *echo.Echo) []*ResultFn {
 	results := make([]*ResultFn, 0)
 	for i, hl := range s.BeforeFn {
@@ -188,6 +189,7 @@ func (s *EchoFn) DoBefore(e *echo.Echo) []*ResultFn {
 	return results
 }
 
+// DoAfter ...
 func (s *EchoFn) DoAfter(e *echo.Echo) []*ResultFn {
 	results := make([]*ResultFn, 0)
 	for i, hl := range s.AfterFn {
