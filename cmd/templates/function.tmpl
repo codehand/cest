@@ -84,7 +84,7 @@ func {{.TestName}}(t *testing.T) {
 				{{template "results" $f}} {{template "call" $f}}
 			{{- end}}
 			{{- if and .IsEcho}}
-					ctx, _, _ := mctx.NewContext(e, echo.GET, "", nil, nil)
+					ctx, _, _ := mctx.NewContext(e, echo.GET, "", nil, nil, nil)
 			{{- end}}
 			{{- if .ReturnsError}}
 				if {{if .OnlyReturnsError}} err := {{template "call" $f}}; {{end}} err != nil {
