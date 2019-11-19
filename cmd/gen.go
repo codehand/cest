@@ -136,7 +136,9 @@ func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string
 	if err != nil {
 		return nil, fmt.Errorf("Parser.Parse source file: %v", err)
 	}
+
 	h := sr.Header
+	h.PkgName = h.Package
 	h.Code = nil // Code is only needed from parsed test files.
 	testPath := Path(src).TestPath()
 	// output
@@ -149,14 +151,16 @@ func generateTest(src Path, files []Path, opt *Options, srcPath, rootPath string
 	if err != nil {
 		return nil, err
 	}
+
 	funcs, h := testableFuncs(h, sr.Funcs, opt.Only, opt.Exclude, opt.Exported, opt.OutputCustomDefault(), tf)
 	if len(funcs) == 0 || h.Package == "main" {
 		return nil, nil
 	}
 
 	if opt.OutputCustomDefault() {
-		// h.Package = "tests" // CHECK
+		h.Package = "tests" // CHECK
 	}
+
 	b, err := ProcessOutput(h, funcs, &OptionsOutput{
 		PrintInputs:    opt.PrintInputs,
 		Subtests:       opt.Subtests,
@@ -197,15 +201,18 @@ func parseTestFile(p *Parser, testPath string, h *Header) (*Header, []string, er
 				Path: `"github.com/codehand/cest/echo/mctx"`,
 			})
 		}
+		// fun.Package = h.Package
 		testFuncs = append(testFuncs, fun.Name)
 	}
 	tr.Header.Imports = append(tr.Header.Imports, h.Imports...)
+	tr.Header.PkgName = h.PkgName
 	h = tr.Header
 	// fmt.Println("tr.Header:", tr.Header.Comments)
 	return h, testFuncs, nil
 }
 
 func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp, out bool, testFuncs []string) ([]*Function, *Header) {
+
 	sort.Strings(testFuncs)
 	var fs []*Function
 	for _, f := range funcs {
@@ -218,9 +225,12 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 				Path: `"github.com/codehand/cest/echo/mctx"`,
 			})
 		}
-		if out {
-			f.Package = h.Package
-		}
+		// if testFuncs == nil {
+		f.Package = h.PkgName
+		// }
+		// if out {
+
+		// }
 		fs = append(fs, f)
 	}
 	return fs, h
