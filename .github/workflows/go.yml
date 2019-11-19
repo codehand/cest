@@ -32,6 +32,5 @@ jobs:
         cd example
         go build github.com/codehand/cest
         rm -f **/*_test.go
-        ./cest -all .
-		    go test ./... -v
+        ./cest -all . && go test ./... -v
         
