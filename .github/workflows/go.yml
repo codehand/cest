@@ -86,9 +86,9 @@ jobs:
     - name: Test 7
       run: |
         cd example
-        go build github.com/codehand/cest
         rm -f **/*_test.go
         cd handler
+        go build github.com/codehand/cest
         ./cest -all -output=tests . && go test ./... -v
         rm -rf tests
 
