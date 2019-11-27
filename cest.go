@@ -27,7 +27,7 @@ var (
 	templateParams     = flag.String("template_params", "", "read external parameters to template by json with stdin")
 )
 
-var nosubtests = true
+var nosubtests = false
 
 func helper() {
 	fmt.Println("USAGE")
