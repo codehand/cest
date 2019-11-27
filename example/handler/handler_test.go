@@ -10,7 +10,6 @@ import (
 	"github.com/codehand/cest/echo/mctx"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/travelr/gommon/types"
 )
 
 // TestPackage is func test
@@ -40,6 +39,7 @@ func TestHealthCheck(t *testing.T) {
 		name      string
 		args      args
 		wantErr   bool
+		result    interface{}
 		scriptsFn *mctx.EchoFn
 	}{
 		// TODO: Add test cases.
@@ -72,12 +72,12 @@ func TestHealthCheck(t *testing.T) {
 
 		if tt.wantErr {
 			assert.NotEqual(t, 200, res.Code)
-			var data types.PayloadStatus
+			var data mctx.BaseStatus
 			err = json.Unmarshal(body, &data)
 			assert.NoError(t, err)
 			assert.NotEmpty(t, data.Message, string(body))
 			assert.NotEmpty(t, data.Code, string(body))
-			expected, ok := tt.result.(types.PayloadStatus)
+			expected, ok := tt.result.(mctx.BaseStatus)
 			if ok {
 				assert.True(t, reflect.DeepEqual(expected, data))
 				assert.Equal(t, data.Code, expected.Code)

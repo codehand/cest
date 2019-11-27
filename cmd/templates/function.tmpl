@@ -42,6 +42,7 @@ func {{.TestName}}(t *testing.T) {
 			wantErr bool
 		{{- end}}
 		{{- if and .IsEcho}}
+				result interface{}
 				scriptsFn   *mctx.EchoFn
 		{{- end}}
 	}{
