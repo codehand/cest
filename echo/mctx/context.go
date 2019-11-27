@@ -2,6 +2,7 @@ package mctx
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -52,18 +53,24 @@ func NewCustomContext(e *echo.Echo, opts ...Option) (echo.Context, *http.Request
 		obj, _ = json.Marshal(options.body)
 		// payload = strings.NewReader(string(obj))
 	}
-	req := httptest.NewRequest(options.method, "/", strings.NewReader(string(obj)))
-	res := httptest.NewRecorder()
-	ctx := e.NewContext(req, res)
+	fmt.Println("options.query:", options.query)
 	if len(options.query) > 0 {
 		q := make(url.Values)
 		for k, v := range options.query {
 			q.Set(k, v)
 		}
 		options.path = options.path + "/?" + q.Encode()
+		fmt.Println("???")
 	}
 
+	req := httptest.NewRequest(options.method, options.path, strings.NewReader(string(obj)))
+	res := httptest.NewRecorder()
+	ctx := e.NewContext(req, res)
+
+	fmt.Println("options.path: ", options.path)
 	ctx.SetPath(options.path)
+
+	fmt.Println("ctx.Path(): ", ctx.Path())
 	for k, v := range options.headers {
 		ctx.Request().Header.Add(k, v)
 	}
