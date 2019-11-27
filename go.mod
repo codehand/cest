@@ -10,8 +10,8 @@ require (
 	github.com/mattn/go-colorable v0.1.2
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
 	github.com/mjibson/esc v0.2.0 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
 	github.com/spf13/cast v1.3.0
 	github.com/stretchr/testify v1.4.0
+	gitlab.com/travelr/gommon v1.1.33
 	golang.org/x/tools v0.0.0-20191112161542-74addff584d1
 )

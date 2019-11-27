@@ -226,7 +226,7 @@ BOJgL+N6zZ8AAAD//5cjH10lAQAA
 		name:    "function.tmpl",
 		local:   "/Users/tamgh/ws/src/github.com/codehand/cest/cmd/templates/function.tmpl",
 		size:    4269,
-		modtime: 1574848208,
+		modtime: 1574848438,
 		compressed: `
 H4sIAAAAAAAC/9xXS3PbOBI+S7+io4pdpIuBsnt0yoc4dlJ7iJ21vZvDzFQKJpsSJySgAZq2VSz89yk8
 +JJoxZmquYwPsgj048OH7q+ppskwLwTCIq9FSoUUC2PmTfMGXudwegbMmPl8uYSmYXeo6YpXaAwUGqw5
