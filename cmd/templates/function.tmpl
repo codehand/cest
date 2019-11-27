@@ -84,7 +84,12 @@ func {{.TestName}}(t *testing.T) {
 				{{template "results" $f}} {{template "call" $f}}
 			{{- end}}
 			{{- if and .IsEcho}}
-					ctx, _, _ := mctx.NewContext(e, echo.GET, "", nil, nil, nil)
+					// ctx, _, _ := mctx.NewContext(e, echo.GET, "", nil, nil, nil)
+					ctx, _, res := mctx.NewCustomContext(e,
+						mctx.WithPath("/api/v1/"),
+						mctx.WithMethod(echo.GET),
+						// mctx.WithQuery(params),
+					)
 			{{- end}}
 			{{- if .ReturnsError}}
 				if {{if .OnlyReturnsError}} err := {{template "call" $f}}; {{end}} err != nil {
@@ -93,6 +98,29 @@ func {{.TestName}}(t *testing.T) {
 						{{if .Subtests }}return{{else}}continue{{end}}
 					{{- end}}
 				}
+			{{- end}}
+			{{- if .ReturnsError}}
+				body, err := ioutil.ReadAll(res.Body)
+				assert.NoError(t, err)
+				fmt.Printf("%s \n", body)
+
+				if tt.wantErr {
+					assert.NotEqual(t, 200, res.Code)
+					var data types.PayloadStatus
+					err = json.Unmarshal(body, &data)
+					assert.NoError(t, err)
+					assert.NotEmpty(t, data.Message, string(body))
+					assert.NotEmpty(t, data.Code, string(body))
+					expected, ok := tt.result.(types.PayloadStatus)
+					if ok {
+						assert.True(t, reflect.DeepEqual(expected, data))
+						assert.Equal(t, data.Code, expected.Code)
+						assert.Equal(t, data.Message, expected.Message)
+					}
+				} else {
+					// to do sth
+				}
+
 			{{- end}}
 			{{- range .TestResults}}
 				{{- if .IsWriter}}
