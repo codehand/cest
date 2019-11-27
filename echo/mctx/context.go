@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -54,10 +55,19 @@ func NewCustomContext(e *echo.Echo, opts ...Option) (echo.Context, *http.Request
 	req := httptest.NewRequest(options.method, "/", strings.NewReader(string(obj)))
 	res := httptest.NewRecorder()
 	ctx := e.NewContext(req, res)
+	if len(options.query) > 0 {
+		q := make(url.Values)
+		for k, v := range options.query {
+			q.Set(k, v)
+		}
+		options.path = options.path + "/?" + q.Encode()
+	}
+
 	ctx.SetPath(options.path)
 	for k, v := range options.headers {
 		ctx.Request().Header.Add(k, v)
 	}
+
 	var ks []string
 	var vs []string
 	for k, v := range options.params {

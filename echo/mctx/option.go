@@ -9,6 +9,7 @@ type options struct {
 	path    string
 	params  map[string]string
 	headers map[string]string
+	query   map[string]string
 	body    interface{}
 }
 
@@ -61,5 +62,11 @@ func WithParams(params map[string]string) Option {
 func WithHeaders(headers map[string]string) Option {
 	return optionFunc(func(o *options) {
 		o.headers = headers
+	})
+}
+
+func WithQuery(queries map[string]string) Option {
+	return optionFunc(func(o *options) {
+		o.query = queries
 	})
 }
