@@ -9,7 +9,7 @@ import (
 
 	"github.com/codehand/cest/echo/mctx"
 	"github.com/labstack/echo/v4"
-	"ithub.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestPackage is func test
