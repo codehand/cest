@@ -53,16 +53,3 @@ func (s *S) PerformRequest(method string, path string, params url.Values) (*http
 	s.Server.ServeHTTP(response, request)
 	return response, nil
 }
-
-// TestHealthCheck is func test for handler HealthCheck
-func (s *S) TestHealthCheck(c *C) {
-	_, err := s.PerformRequest("GET", "/healthcheck", url.Values{})
-	c.Assert(err, Equals, nil)
-}
-
-// BenchmarkHealthCheck is func test benchmark of gocheck. You can use that go test -check.b -check.bmem
-func (s *S) BenchmarkHealthCheck(c *C) {
-	for i := 0; i < c.N; i++ {
-		s.PerformRequest("GET", "/healthcheck", url.Values{})
-	}
-}
