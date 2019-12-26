@@ -224,7 +224,7 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 		}
 		h.Imports = append(h.Imports, &Import{
 			Name: "",
-			Path: `"ithub.com/stretchr/testify/assert"`,
+			Path: `"github.com/stretchr/testify/assert"`,
 		})
 
 		if f.IsEcho {
