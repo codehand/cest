@@ -48,8 +48,8 @@ func (mi *Migration) Down() (bool, error) {
 	return true, nil
 }
 
-// RunMigration is func run migration mysql
-func RunMigration(dbConn *sql.DB, migrationsFolderLocation string) (*Migration, error) {
+// runMigration is func run migration mysql
+func runMigration(dbConn *sql.DB, migrationsFolderLocation string) (*Migration, error) {
 	dataPath := []string{}
 	dataPath = append(dataPath, "file://")
 	dataPath = append(dataPath, migrationsFolderLocation)

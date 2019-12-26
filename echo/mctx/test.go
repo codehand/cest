@@ -1,6 +1,7 @@
 package mctx
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -52,4 +53,35 @@ func (s *S) PerformRequest(method string, path string, params url.Values) (*http
 
 	s.Server.ServeHTTP(response, request)
 	return response, nil
+}
+
+// WitMysqlMigration is func plugin run migrate data test
+func (s *S) WitMysqlMigration(dbConn *gorm.DB, migrationsFolderLocation string) error {
+	if s == nil {
+		panic("Server with server nil")
+	}
+
+	if dbConn == nil {
+		return fmt.Errorf("%v", "Connection nil")
+	}
+	s.DBConn = dbConn
+	mi, err := runMigration(s.DBConn.DB(), migrationsFolderLocation)
+	if err != nil {
+		return err
+	}
+	s.Migration = mi
+	return nil
+}
+
+// WithEcho is func setup echo
+func (s *S) WithEcho(e *echo.Echo) *S {
+	if s == nil {
+		panic("Server with server nil")
+	}
+	if e == nil {
+		s.Server = echo.New()
+		return s
+	}
+	s.Server = e
+	return s
 }
