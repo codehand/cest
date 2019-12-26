@@ -222,6 +222,11 @@ func testableFuncs(h *Header, funcs []*Function, only, excl *regexp.Regexp, exp,
 		if isTestFunction(f, testFuncs) || isExcluded(f, excl) || isUnexported(f, exp) || !isIncluded(f, only) || isInvalid(f) {
 			continue
 		}
+		h.Imports = append(h.Imports, &Import{
+			Name: "",
+			Path: `"ithub.com/stretchr/testify/assert"`,
+		})
+
 		if f.IsEcho {
 			h.Imports = append(h.Imports, &Import{
 				Name: "",
