@@ -10,6 +10,9 @@ os:
   - linux
   - osx
   - windows
+env:
+- GO111MODULE=on
+
 before_install:
   - cp .netrc ~
   - chmod 600 .netrc
