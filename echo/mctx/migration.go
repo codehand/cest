@@ -8,6 +8,9 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	_mysql "github.com/golang-migrate/migrate/v4/database/mysql"
+
+	// driver for mysql
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // https://github.com/golang-migrate/migrate/blob/master/testing/testing.go
