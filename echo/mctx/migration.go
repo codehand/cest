@@ -3,6 +3,7 @@ package mctx
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/url"
 	"strings"
 
@@ -21,23 +22,29 @@ type Migration struct {
 
 // Up is func new version
 func (mi *Migration) Up() (bool, error) {
+	log.Println("Starting a Test. Migrating the Database")
 	err := mi.Migrate.Up()
 	if err != nil {
 		if err == migrate.ErrNoChange {
-			fmt.Println("ErrNoChange: ", err.Error())
+			log.Println("Migrating ErrNoChange: ", err.Error())
 			return true, nil
 		}
+		log.Printf("Migrating err %v\n", err)
 		return false, err
 	}
+	log.Println("Database Migrated Successfully")
 	return true, nil
 }
 
 // Down is func tear down version
 func (mi *Migration) Down() (bool, error) {
+	log.Println("Finishing Test. Dropping The Database")
 	err := mi.Migrate.Down()
 	if err != nil {
+		log.Printf("Migrating err %v\n", err)
 		return false, err
 	}
+	log.Println("Database Dropped Successfully")
 	return true, nil
 }
 
