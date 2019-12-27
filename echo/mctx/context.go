@@ -105,7 +105,7 @@ func ConvertURL(i interface{}) (values url.Values) {
 	typ := iVal.Type()
 	for i := 0; i < iVal.NumField(); i++ {
 		f := iVal.Field(i)
-		tag := typ.Field(i).Tag.Get("tagname")
+		tag := typ.Field(i).Tag.Get("json")
 		if tag != "" {
 			var v string
 			switch f.Interface().(type) {
@@ -122,7 +122,7 @@ func ConvertURL(i interface{}) (values url.Values) {
 			case string:
 				v = f.String()
 			}
-			values.Set(typ.Field(i).Name, v)
+			values.Set(tag, v)
 		}
 	}
 	return
