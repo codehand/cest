@@ -96,6 +96,9 @@ func NewCustomContext(e *echo.Echo, opts ...Option) (echo.Context, *http.Request
 // ConvertURL is func convert struct (interface) to map
 func ConvertURL(i interface{}) (values url.Values) {
 	values = url.Values{}
+	if i == nil {
+		return
+	}
 	iVal := reflect.ValueOf(i).Elem()
 	typ := iVal.Type()
 	for i := 0; i < iVal.NumField(); i++ {
