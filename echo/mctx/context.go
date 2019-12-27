@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"reflect"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -90,4 +91,15 @@ func NewCustomContext(e *echo.Echo, opts ...Option) (echo.Context, *http.Request
 
 	ctx.Request().Header.Add("Content-Type", "application/json")
 	return ctx, req, res
+}
+
+// ConvertURL is func convert struct (interface) to map
+func ConvertURL(i interface{}) (values url.Values) {
+	values = url.Values{}
+	iVal := reflect.ValueOf(i).Elem()
+	typ := iVal.Type()
+	for i := 0; i < iVal.NumField(); i++ {
+		values.Set(typ.Field(i).Name, fmt.Sprint(iVal.Field(i)))
+	}
+	return
 }
