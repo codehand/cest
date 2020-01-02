@@ -2,6 +2,7 @@ package mctx
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"net/url"
@@ -12,6 +13,10 @@ import (
 
 	// driver for mysql
 	_ "github.com/go-sql-driver/mysql"
+)
+
+var (
+	ErrNoNotFound = errors.New("file does not exist")
 )
 
 // https://github.com/golang-migrate/migrate/blob/master/testing/testing.go
