@@ -34,6 +34,9 @@ func (mi *Migration) Up() (bool, error) {
 			log.Println("Migrating ErrNoChange: ", err.Error())
 			return true, nil
 		}
+		if err == ErrNoNotFound {
+			log.Println("Migrating not found: ", err.Error())
+		}
 		log.Printf("Migrating err %v\n", err)
 		return false, err
 	}
