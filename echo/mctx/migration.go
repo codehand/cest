@@ -15,11 +15,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// var global
 var (
 	ErrNoNotFound = errors.New("file does not exist")
 )
 
 // https://github.com/golang-migrate/migrate/blob/master/testing/testing.go
+
+// Migration ...
 type Migration struct {
 	Migrate *migrate.Migrate
 	Driver  string
